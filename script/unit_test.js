@@ -38,13 +38,13 @@ describe("uniswap unit test", () => {
       // deploy erc20 token contract
       const erc20Contract = await ethers.getContractFactory("TestERC20");
       let token0 = await erc20Contract.deploy(10000000000000);
-      await token0.deployed();
+      await token0.waitForDeployment();
       let token1 = await erc20Contract.deploy(10000000000000);
-      await token1.deployed();
+      await token1.waitForDeployment();
       let token2 = await erc20Contract.deploy(10000000000000);
-      await token2.deployed();
+      await token2.waitForDeployment();
 
-      if (token0.address.toLowerCase() > token1.address.toLowerCase()) {
+      if (await token0.getAddress() > await token1.getAddress()) {
           const tmp = token0;
           token0 = token1;
           token1 = tmp;
@@ -53,48 +53,48 @@ describe("uniswap unit test", () => {
       // deploy factory
       const factoryContract = await ethers.getContractFactory("UniswapV3Factory");
       const factory = await factoryContract.deploy();
-      await factory.deployed();
+      await factory.waitForDeployment();
 
       // deploy SwapRouter
       const swapRouterContract = await ethers.getContractFactory("SwapRouter");
-      const swapRouter = await swapRouterContract.deploy(factory.address, token0.address);
-      await swapRouter.deployed();
+      const swapRouter = await swapRouterContract.deploy(await factory.getAddress(), await token0.getAddress());
+      await swapRouter.waitForDeployment();
 
       // deploy NonfungibleTokenPositionDescriptor
       const nftDescriptionContract = await ethers.getContractFactory("NonfungibleTokenPositionDescriptor");
-      const nftDescription = await nftDescriptionContract.deploy(token0.address); 
-      await nftDescription.deployed();
+      const nftDescription = await nftDescriptionContract.deploy(await token0.getAddress()); 
+      await nftDescription.waitForDeployment();
 
       // deploy NonfungiblePositionManager
       const nftContract = await ethers.getContractFactory("NonfungiblePositionManager");
-      const nft = await nftContract.deploy(factory.address, token0.address, nftDescription.address); 
-      await nft.deployed();
+      const nft = await nftContract.deploy(await factory.getAddress(), await token0.getAddress(), await nftDescription.getAddress()); 
+      await nft.waitForDeployment();
 
       // deploy quoter
       const quoterContract = await ethers.getContractFactory("QuoterV2");
-      const quoter = await quoterContract.deploy(factory.address, token0.address); 
-      await quoter.deployed();
+      const quoter = await quoterContract.deploy(await factory.getAddress(), await token0.getAddress()); 
+      await quoter.waitForDeployment();
 
       // create pool
       await nft.createAndInitializePoolIfNecessary(
-          token0.address,
-          token1.address,
+          await token0.getAddress(),
+          await token1.getAddress(),
           500,
           "0x1000000000000000000000000"
       );
 
-      const poolAddress = await factory.getPool(token0.address, token1.address, 500);
+      const poolAddress = await factory.getPool(await token0.getAddress(), await token1.getAddress(), 500);
       console.log("new pool address is", poolAddress);
       const pool = await ethers.getContractAt("UniswapV3Pool", poolAddress);
 
-      await token0.approve(nft.address, 10000000000000);
-      await token1.approve(nft.address, 10000000000000);
-      await token2.approve(nft.address, 10000000000000);
+      await token0.approve(await nft.getAddress(), 10000000000000);
+      await token1.approve(await nft.getAddress(), 10000000000000);
+      await token2.approve(await nft.getAddress(), 10000000000000);
       // mint
       await nft.mint(
           [
-              token0.address,
-              token1.address,
+              await token0.getAddress(),
+              await token1.getAddress(),
               500,
               -2230, // 0.8, lowprice
               1820, // 1.2, upprice
@@ -121,10 +121,10 @@ describe("uniswap unit test", () => {
       let position = await nft.positions(1);
       console.log("position is", position);
 
-      const tx = await quoter.callStatic.quoteExactInputSingle(
+      const tx = await quoter.quoteExactInputSingle.staticCall(
           [
-              token1.address,
-              token0.address,
+              await token1.getAddress(),
+              await token0.getAddress(),
               10000,
               500,
               "0x1200000000000000000000000"
@@ -132,12 +132,12 @@ describe("uniswap unit test", () => {
       );
       console.log(tx);
 
-      await token1.approve(swapRouter.address, 10000000000000);
+      await token1.approve(await swapRouter.getAddress(), 10000000000000);
       // swap
       await swapRouter.exactInputSingle(
           [
-              token1.address,
-              token0.address,
+              await token1.getAddress(),
+              await token0.getAddress(),
               500,
               owner.address,
               1810000000,
@@ -151,7 +151,7 @@ describe("uniswap unit test", () => {
 
       // decrease liquidity
       //await nft.approve(owner.address, 1)
-      const burnAmount = await nft.callStatic.decreaseLiquidity(
+      const burnAmount = await nft.decreaseLiquidity.staticCall(
           [
               1,
               478357044538,
@@ -165,16 +165,16 @@ describe("uniswap unit test", () => {
       // path router
       // 0-1, 1-2
       await nft.createAndInitializePoolIfNecessary(
-          token1.address,
-          token2.address,
+          await token1.getAddress(),
+          await token2.getAddress(),
           500,
           "0x2000000000000000000000000"
       );
 
       await nft.mint(
           [
-              token1.address,
-              token2.address,
+              await token1.getAddress(),
+              await token2.getAddress(),
               500,
               0, // 1.0, lowprice
               9160, // 2.5 upprice
@@ -189,14 +189,14 @@ describe("uniswap unit test", () => {
 
       const path = encodePath(
           [
-              token0.address,
-              token1.address,
-              token2.address
+              await token0.getAddress(),
+              await token1.getAddress(),
+              await token2.getAddress()
           ],
           [500, 500]
       );
-      await token0.approve(swapRouter.address, 10000000000000);
-      const amountOut = await quoter.callStatic.quoteExactInput(
+      await token0.approve(await swapRouter.getAddress(), 10000000000000);
+      const amountOut = await quoter.quoteExactInput.staticCall(
           path,
           1000
       );
