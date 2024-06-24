@@ -1,68 +1,49 @@
 {
-  "name": "@uniswap/v3-periphery",
-  "description": "🎚 Peripheral smart contracts for interacting with Uniswap V3",
-  "license": "GPL-2.0-or-later",
-  "publishConfig": {
-    "access": "public"
-  },
-  "version": "1.4.4",
-  "homepage": "https://uniswap.org",
-  "keywords": [
-    "uniswap",
-    "periphery",
-    "v3"
-  ],
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/Uniswap/uniswap-v3-periphery"
-  },
-  "files": [
-    "contracts/base",
-    "contracts/interfaces",
-    "contracts/libraries",
-    "artifacts/contracts/**/*.json",
-    "!artifacts/contracts/**/*.dbg.json",
-    "!artifacts/contracts/test/**/*",
-    "!artifacts/contracts/base/**/*"
-  ],
-  "engines": {
-    "node": ">=10"
-  },
-  "dependencies": {
-    "@openzeppelin/contracts": "3.4.2-solc-0.7",
-    "@uniswap/lib": "^4.0.1-alpha",
-    "@uniswap/v2-core": "^1.0.1",
-    "@uniswap/v3-core": "^1.0.0",
-    "base64-sol": "1.0.1"
+  "name": "@helix/contracts",
+  "version": "1.0.1",
+  "main": "index.js",
+  "author": "Darwinia dev",
+  "license": "MIT",
+  "scripts": {
+    "build": "hardhat compile",
+    "test": "npx hardhat test",
+    "script": "npx hardhat run",
+    "clean": "shx rm -rf cache artifacts abi",
+    "flat": "npx hardhat flat",
+    "verify": "npx hardhat verify"
   },
   "devDependencies": {
-    "@nomiclabs/hardhat-ethers": "^2.0.2",
-    "@nomiclabs/hardhat-etherscan": "^2.1.8",
+    "@nomicfoundation/hardhat-toolbox": "^4.0.0",
+    "@nomicfoundation/hardhat-verify": "^2.0.5",
+    "@nomiclabs/hardhat-ethers": "2.0.5",
+    "@nomiclabs/hardhat-etherscan": "^3.1.8",
     "@nomiclabs/hardhat-waffle": "^2.0.1",
-    "@typechain/ethers-v5": "^4.0.0",
-    "@types/chai": "^4.2.6",
-    "@types/mocha": "^5.2.7",
-    "chai": "^4.2.0",
-    "decimal.js": "^10.2.1",
-    "ethereum-waffle": "^3.0.2",
-    "ethers": "^5.0.8",
-    "hardhat": "^2.6.8",
-    "hardhat-typechain": "^0.3.5",
-    "hardhat-watcher": "^2.1.1",
-    "is-svg": "^4.3.1",
-    "mocha": "^6.2.2",
-    "mocha-chai-jest-snapshot": "^1.1.0",
-    "prettier": "^2.0.5",
-    "prettier-plugin-solidity": "^1.0.0-beta.10",
-    "solhint": "^3.2.1",
-    "solhint-plugin-prettier": "^0.0.5",
-    "ts-generator": "^0.1.1",
-    "ts-node": "^8.5.4",
-    "typechain": "^4.0.0",
-    "typescript": "^3.7.3"
+    "chai": "^4.3.4",
+    "chai-as-promised": "^7.1.1",
+    "dotenv": "^10.0.0",
+    "ethereum-waffle": "^3.0.0",
+    "ethers": "^6.1.0",
+    "hardhat": "^2.20.1",
+    "hardhat-abi-exporter": "^2.2.1",
+    "readline-sync": "^1.4.10",
+    "shx": "^0.3.3"
   },
-  "scripts": {
-    "compile": "hardhat compile",
-    "test": "hardhat test"
+  "dependencies": {
+    "@nomicfoundation/hardhat-chai-matchers": "^2.0.0",
+    "@nomicfoundation/hardhat-ethers": "^3.0.0",
+    "@nomicfoundation/hardhat-network-helpers": "^1.0.0",
+    "@openzeppelin/contracts": "3.4.2-solc-0.7",
+    "@typechain/ethers-v6": "^0.5.0",
+    "@typechain/hardhat": "^9.0.0",
+    "@types/mocha": ">=9.1.0",
+    "@uniswap/lib": "^4.0.1-alpha",
+    "@uniswap/v2-core": "^1.0.1",
+    "@uniswap/v3-core": "https://github.com/helix-bridge/v3-core.git#v3.0.0",
+    "base64-sol": "^1.1.0",
+    "hardhat-gas-reporter": "^1.0.8",
+    "npx": "^10.2.2",
+    "solidity-coverage": "^0.8.1",
+    "ts-node": ">=8.0.0",
+    "typescript": ">=4.5.0"
   }
 }
