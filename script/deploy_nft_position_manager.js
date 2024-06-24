@@ -8,13 +8,14 @@ async function deployNftManager(w) {
         "0x5F8D4232367759bCe5d9488D3ade77FCFF6B9b6B",
         "0x61b6b8c7c00aa7f060a2bedee6b11927cc9c3ef1"
     );
-    const tx = await r.deployed();
-    console.log("finish to deploy nft position manager, address:", r.address);
-    return r.address;
+    const tx = await r.waitForDeployment();
+    const address = await r.getAddress();
+    console.log("finish to deploy nft position manager, address:", address);
+    return address;
 }
 
 function wallet(url) {
-    const provider = new ethers.providers.JsonRpcProvider(url);
+    const provider = new ethers.JsonRpcProvider(url);
     const wallet = new ethers.Wallet(privateKey, provider);
     return wallet;
 }

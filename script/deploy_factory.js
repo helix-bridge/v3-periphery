@@ -3,13 +3,14 @@ const privateKey = process.env.PRIKEY
 async function deployFactory(w) {
     const factoryContract = await ethers.getContractFactory("UniswapV3Factory", w);
     const f = await factoryContract.deploy();
-    const tx = await f.deployed();
-    console.log("finish to deploy factory, address:", f.address);
-    return f.address;
+    const tx = await f.waitForDeployment();
+    const address = await f.getAddress();
+    console.log("finish to deploy factory, address:", address);
+    return address;
 }
 
 function wallet(url) {
-    const provider = new ethers.providers.JsonRpcProvider(url);
+    const provider = new ethers.JsonRpcProvider(url);
     const wallet = new ethers.Wallet(privateKey, provider);
     return wallet;
 }

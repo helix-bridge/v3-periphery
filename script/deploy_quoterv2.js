@@ -7,13 +7,14 @@ async function deployQuoterV2(w) {
         "0xc95D939Da72ECe8Bd794d42EaEd28974CDb0ADa2",
         "0x5F8D4232367759bCe5d9488D3ade77FCFF6B9b6B"
     );
-    const tx = await r.deployed();
-    console.log("finish to deploy quoterv2, address:", r.address);
-    return r.address;
+    const tx = await r.waitForDeployment();
+    const address = await r.getAddress();
+    console.log("finish to deploy quoterv2, address:", address);
+    return address;
 }
 
 function wallet(url) {
-    const provider = new ethers.providers.JsonRpcProvider(url);
+    const provider = new ethers.JsonRpcProvider(url);
     const wallet = new ethers.Wallet(privateKey, provider);
     return wallet;
 }

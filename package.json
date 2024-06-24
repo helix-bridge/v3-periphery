@@ -9,7 +9,8 @@
     "test": "npx hardhat test",
     "script": "npx hardhat run",
     "clean": "shx rm -rf cache artifacts abi",
-    "flat": "npx hardhat flat"
+    "flat": "npx hardhat flat",
+    "verify": "npx hardhat verify"
   },
   "devDependencies": {
     "@nomicfoundation/hardhat-toolbox": "^4.0.0",
